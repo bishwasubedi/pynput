@@ -24,6 +24,8 @@ implementation is located in a platform dependent module.
 # pylint: disable=R0903
 # We implement stubs
 
+import sys
+
 import contextlib
 import enum
 import threading
