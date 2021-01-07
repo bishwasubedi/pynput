@@ -239,6 +239,10 @@ class Listener(ListenerMixin, _base.Listener):
         Key.shift_r: Quartz.kCGEventFlagMaskShift}
 
     def __init__(self, *args, **kwargs):
+        if kwargs.pop('ctrlflag', False):
+            self._ctrl_flag = Quartz.kCGEventFlagMaskControl
+        else:
+            self._ctrl_flag = 0
         super(Listener, self).__init__(*args, **kwargs)
         self._flags = 0
         self._context = None
@@ -330,6 +334,15 @@ class Listener(ListenerMixin, _base.Listener):
         length, chars = Quartz.CGEventKeyboardGetUnicodeString(
             event, 100, None, None)
         if length > 0:
+            if self._ctrl_flag:
+                try:
+                    ordinal = ord(chars)
+                    if ordinal <= 26:
+                        flags = Quartz.CGEventGetFlags(event)
+                        if flags & self._ctrl_flag:
+                            chars = chr(96 + ordinal)
+                except:
+                    pass
             return KeyCode.from_char(chars, vk=vk)
 
         # ...and fall back on a virtual key code

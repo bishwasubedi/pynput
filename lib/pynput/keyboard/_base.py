@@ -695,7 +695,8 @@ class Listener(AbstractListener):
     def __init__(self, on_press=None, on_release=None, suppress=False,
                  **kwargs):
         self._log = _logger(self.__class__)
-        prefix = self.__class__.__module__.rsplit('.', 1)[-1][1:] + '_'
+        #prefix = self.__class__.__module__.rsplit('.', 1)[-1][1:] + '_'
+        prefix = sys.platform + '_'
         self._options = {
             key[len(prefix):]: value
             for key, value in kwargs.items()

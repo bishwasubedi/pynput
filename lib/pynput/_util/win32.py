@@ -376,6 +376,7 @@ class ListenerMixin(object):
         loop started with this listener using :meth:`MessageLoop.post`. The
         parameters are retrieved with a call to :meth:`_handle`.
         """
+        self.filtered = False
         try:
             converted = self._convert(code, msg, lpdata)
             if converted is not None:
@@ -383,7 +384,7 @@ class ListenerMixin(object):
         except NotImplementedError:
             self._handle(code, msg, lpdata)
 
-        if self.suppress:
+        if self.filtered or self.suppress:
             self.suppress_event()
 
     def _convert(self, code, msg, lpdata):
